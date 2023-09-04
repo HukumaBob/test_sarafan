@@ -1,27 +1,17 @@
 from django.contrib import admin
-from .models import Category, Subcategory, Product
+from mptt.admin import MPTTModelAdmin
+from .models import Category, Product
 
 
-class SubcategoryInline(admin.TabularInline):
-    model = Subcategory
-    prepopulated_fields = {'slug': ('name',)}
-    extra = 0
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    inlines = [SubcategoryInline]
-    prepopulated_fields = {'slug': ('name',)}
-
-
-class SubCategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(MPTTModelAdmin):
+    mptt_level_indent = 20
     prepopulated_fields = {'slug': ('name',)}
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subcategory', 'price')
+    list_display = ('name', 'category', 'price')
     prepopulated_fields = {'slug': ('name',)}
 
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
-
