@@ -6,7 +6,6 @@ load_dotenv()
 bot_token = os.getenv("BOT_TOKEN")
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#SECRET_KEY = 'django-insecure-b##5sjgxtu!+qxctelnmv!ncgvo@o5=thrix0fupk8@4(d-+88'
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure31415926')
 
 # SECURITY WARNING: don't run with debug turned on in production!
