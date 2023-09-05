@@ -1,13 +1,14 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
-from mptt.models import MPTTModel, TreeForeignKey, TreeManager
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Category(MPTTModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='category_images/')
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='sub_categories')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='categories')
     verbose_name = 'category'
     verbose_name_plural = 'categories'
 
@@ -34,5 +35,16 @@ class Product(models.Model):
     image_medium = models.ImageField(upload_to='product_images/medium/')
     image_small = models.ImageField(upload_to='product_images/small/')
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
+
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
